@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,10 +31,13 @@ namespace Library.Api
             services.AddScoped<IBookRepository, MockBookRepository>();
             services.AddScoped<IAuthorRepository, MockAuthorRepository>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddControllers(configure:setup=> {
+            services.AddControllers(configure: setup =>
+            {
+                //setup.Filters.Add<>
+                //在不能返回accept header支持的正确格式是 返回406 not acceptable
                 setup.ReturnHttpNotAcceptable = true;
-                setup.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
-            });
+                //setup.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+            }).AddXmlDataContractSerializerFormatters();//这个命令可以提供requesthead body中xml的支持
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
